@@ -34,6 +34,19 @@ const deleteTask = asyncWrapper(async (req, res) => {
         res.status(200).json({ task })
 })
 
+const updateTask = asyncWrapper(async (req, res) => {
+        const { id: taskID } = req.params
+        const task = await Task.findByIdAndUpdate({ _id: taskID }, req.body, {
+            new: true,
+            runValidators: true,
+        })
+
+        if (!task) {
+            return next(createCustomError(404, `No task with the id ${taskID} `))
+        }
+
+        res.status(200).json({ task })
+})
 
 module.exports = {
     getAllTasks, createTask, getTask, updateTask, deleteTask
